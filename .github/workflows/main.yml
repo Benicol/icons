@@ -1,0 +1,30 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Build the Docker image
+      - name: Build Docker Image
+        run: |
+          docker build -t icons-app:latest ./icons
+          docker save icons-app:latest -o icons-app.tar
+
+      # Step 3: Upload the Docker image as an artifact
+      - name: Upload Docker Image
+        uses: actions/upload-artifact@v3
+        with:
+          name: icons-app
+          path: icons-app.tar
